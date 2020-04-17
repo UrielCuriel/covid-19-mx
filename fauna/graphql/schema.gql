@@ -1,0 +1,165 @@
+type Caso {
+  fechaActualizacion: Date
+  fechaIngreso: Date!
+  fechaSintomas: Date!
+  fechaDef: Date
+  edad: Int!
+  pais: String!
+  origen: Origen!
+  sector: Sector!
+  sexo: Sexo! @relation
+  tipoPaciente: Paciente! @relation
+  nacionalidad: Nacionalidad! @relation
+  resultado: Resultado! @relation
+  entidadUm: Entidad! @relation(name: "entidad_unidad_medica")
+  entidadNac: Entidad! @relation(name: "entidad_nacimiento")
+  entidadRes: Entidad! @relation(name: "entidad_residencia")
+  municipioRes: Municipio! @relation(name: "municipio_residencia")
+  intubado: Aplica! @relation(name: "intubado")
+  neumonia: Aplica! @relation(name: "neumonia")
+  embarazo: Aplica! @relation @relation(name: "embarazo")
+  hablaLenguaIndigena: Aplica! @relation(name: "lengua_indigena")
+  diabetes: Aplica! @relation(name: "diabetes")
+  epoc: Aplica! @relation(name: "epoc")
+  asma: Aplica! @relation(name: "asma")
+  inmusupr: Aplica! @relation(name: "inmunosuprimido")
+  hipertension: Aplica! @relation(name: "hipertension")
+  otraCon: Aplica! @relation(name: "otra_condicion")
+  cardiovascular: Aplica! @relation(name: "cardiovascular")
+  obesidad: Aplica! @relation(name: "obesidad")
+  renalCronica: Aplica! @relation(name: "renal_cronica")
+  tabaquismo: Aplica! @relation(name: "tabaquismo")
+  otroCaso: Aplica! @relation(name: "otro_caso")
+  migrante: Aplica! @relation(name: "migrante")
+  uci: Aplica! @relation(name: "uci")
+}
+
+type Origen {
+  desc: String!
+}
+type Sector {
+  desc: String!
+}
+type Sexo {
+  desc: String!
+}
+type Paciente {
+  desc: String!
+}
+type Nacionalidad {
+  desc: String!
+}
+
+type Aplica {
+  desc: String!
+}
+type Resultado {
+  desc: String!
+}
+type Entidad {
+  entidadFederativa: String!
+  abreviatura: String!
+  municipios: [Municipio!] @relation
+}
+type Municipio {
+  municipio: String!
+  entidad: Entidad! @relation
+}
+input Catalogo {
+  CLAVE: Int!
+  DESCRIPCION: String!
+}
+input iEntidad {
+  CLAVE_ENTIDAD: String!
+  ENTIDAD_FEDERATIVA: String!
+  ABREVIATURA: String!
+}
+input iMunicipio {
+  CLAVE_MUNICIPIO: String!
+  MUNICIPIO: String!
+  CLAVE_ENTIDAD: String!
+}
+input iCaso {
+  FECHA_ACTUALIZACION: String
+  ORIGEN: String
+  SECTOR: String
+  ENTIDAD_UM: String
+  SEXO: String
+  ENTIDAD_NAC: String
+  ENTIDAD_RES: String
+  MUNICIPIO_RES: String
+  TIPO_PACIENTE: String
+  FECHA_INGRESO: String
+  FECHA_SINTOMAS: String
+  FECHA_DEF: String
+  INTUBADO: String
+  NEUMONIA: String
+  EDAD: String
+  NACIONALIDAD: String
+  EMBARAZO: String
+  HABLA_LENGUA_INDI: String
+  DIABETES: String
+  EPOC: String
+  ASMA: String
+  INMUSUPR: String
+  HIPERTENSION: String
+  OTRA_CON: String
+  CARDIOVASCULAR: String
+  OBESIDAD: String
+  RENAL_CRONICA: String
+  TABAQUISMO: String
+  OTRO_CASO: String
+  RESULTADO: String
+  MIGRANTE: String
+  PAIS_NACIONALIDAD: String
+  PAIS_ORIGEN: String
+  UCI: String
+}
+type Query {
+  allCasos: [Caso!]!
+}
+type Mutation {
+  createOrigen(Origen: Catalogo!): Origen! @resolver(name: "create_origen")
+  createOrigenBatch(origenList: [Catalogo!]): [Origen!]
+    @resolver(name: "create_origen_batch")
+
+  createSector(Sector: Catalogo!): Sector! @resolver(name: "create_sector")
+  createSectorBatch(SectorList: [Catalogo!]): [Sector!]
+    @resolver(name: "create_sector_batch")
+
+  createSexo(Sexo: Catalogo!): Sexo! @resolver(name: "create_sexo")
+  createSexoBatch(SexoList: [Catalogo!]): [Sexo!]
+    @resolver(name: "create_sexo_batch")
+
+  createPaciente(Paciente: Catalogo!): Paciente!
+    @resolver(name: "create_paciente")
+  createPacienteBatch(PacienteList: [Catalogo!]): [Paciente!]
+    @resolver(name: "create_paciente_batch")
+
+  createAplica(Aplica: Catalogo!): Aplica! @resolver(name: "create_aplica")
+  createAplicaBatch(aplicaList: [Catalogo!]): [Aplica!]
+    @resolver(name: "create_aplica_batch")
+
+  createNacionalidad(Nacionalidad: Catalogo!): Nacionalidad!
+    @resolver(name: "create_nacionalidad")
+  createNacionalidadBatch(NacionalidadList: [Catalogo!]): [Nacionalidad!]
+    @resolver(name: "create_nacionalidad_batch")
+
+  createResultado(Resultado: Catalogo!): Resultado!
+    @resolver(name: "create_resultado")
+  createResultadoBatch(ResultadoList: [Catalogo!]): [Resultado!]
+    @resolver(name: "create_resultado_batch")
+
+  createEntidad(Entidad: iEntidad!): Entidad! @resolver(name: "create_entidad")
+  createEntidadBatch(EntidadList: [iEntidad!]): [Entidad!]
+    @resolver(name: "create_entidad_batch")
+
+  createMunicipio(Municipio: iMunicipio!): Municipio!
+    @resolver(name: "create_municipio")
+  createMunicipioBatch(MunicipioList: [iMunicipio!]): [Municipio!]
+    @resolver(name: "create_municipio_batch")
+
+  createCaso(Caso: iCaso!): Caso! @resolver(name: "create_caso")
+  createCasoBatch(CasoList: [iCaso!]!): [Caso!]!
+    @resolver(name: "create_caso_batch")
+}

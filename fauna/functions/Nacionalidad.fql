@@ -1,0 +1,31 @@
+
+Update(
+  Function("create_nacionalidad"),
+  {body: Query(
+    Lambda(
+      "Nacionalidad",
+      Create(
+        Ref(Collection("Nacionalidad"), Select(["CLAVE"], Var("Nacionalidad"))),
+        {
+          data: { desc: Select(["DESCRIPCION"], Var("Nacionalidad")) },
+        }
+      )
+    )
+  ),
+});
+
+Update(
+  Function("create_nacionalidad_batch"),
+  {body: Query(
+    Lambda(
+      ["nacionalidadList"],
+      Map(
+        Var("nacionalidadList"),
+        Lambda(
+          "Nacionalidad",
+          Call(Function("create_nacionalidad"), Var("Nacionalidad"))
+        )
+      )
+    )
+  ),
+});

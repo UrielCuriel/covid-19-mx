@@ -1,0 +1,28 @@
+Update(Function("create_entidad"), {
+  body: Query(
+    Lambda(
+      "Entidad",
+      Create(
+        Ref(Collection("Entidad"), Select(["CLAVE_ENTIDAD"], Var("Entidad"))),
+        {
+          data: {
+            entidadFederativa: Select(["ENTIDAD_FEDERATIVA"], Var("Entidad")),
+            abreviatura: Select(["ABREVIATURA"], Var("Entidad")),
+          },
+        }
+      )
+    )
+  ),
+});
+
+Update(Function("create_entidad_batch"), {
+  body: Query(
+    Lambda(
+      ["entidadList"],
+      Map(
+        Var("entidadList"),
+        Lambda("Entidad", Call(Function("create_entidad"), Var("Entidad")))
+      )
+    )
+  ),
+});

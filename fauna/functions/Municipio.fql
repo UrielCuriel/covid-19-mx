@@ -1,0 +1,40 @@
+Update(Function("create_municipio"), {
+  body: Query(
+    Lambda(
+      "Municipio",
+      Create(
+        Ref(
+          Collection("Municipio"),
+          Concat([
+            Select(["CLAVE_MUNICIPIO"], Var("Municipio")),
+            Select(["CLAVE_ENTIDAD"], Var("Municipio")),
+          ])
+        ),
+        {
+          data: {
+            municipio: Select(["MUNICIPIO"], Var("Municipio")),
+            entidad: Ref(
+              Collection("Entidad"),
+              Select(["CLAVE_ENTIDAD"], Var("Municipio"))
+            ),
+          },
+        }
+      )
+    )
+  ),
+});
+
+Update(Function("create_municipio_batch"), {
+  body: Query(
+    Lambda(
+      ["municipioList"],
+      Map(
+        Var("municipioList"),
+        Lambda(
+          "Municipio",
+          Call(Function("create_municipio"), Var("Municipio"))
+        )
+      )
+    )
+  ),
+});

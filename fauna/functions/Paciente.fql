@@ -1,0 +1,22 @@
+Update(Function("create_paciente"), {
+  body: Query(
+    Lambda(
+      "Paciente",
+      Create(Ref(Collection("Paciente"), Select(["CLAVE"], Var("Paciente"))), {
+        data: { desc: Select(["DESCRIPCION"], Var("Paciente")) },
+      })
+    )
+  ),
+});
+
+Update(Function("create_paciente_batch"), {
+  body: Query(
+    Lambda(
+      ["pacienteList"],
+      Map(
+        Var("pacienteList"),
+        Lambda("Paciente", Call(Function("create_paciente"), Var("Paciente")))
+      )
+    )
+  ),
+});

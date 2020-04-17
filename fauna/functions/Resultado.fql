@@ -1,0 +1,28 @@
+Update(Function("create_resultado"), {
+  body: Query(
+    Lambda(
+      "Resultado",
+      Create(
+        Ref(Collection("Resultado"), Select(["CLAVE"], Var("Resultado"))),
+        {
+          data: { desc: Select(["DESCRIPCION"], Var("Resultado")) },
+        }
+      )
+    )
+  ),
+});
+
+Update(Function("create_resultado_batch"), {
+  body: Query(
+    Lambda(
+      ["resultadoList"],
+      Map(
+        Var("resultadoList"),
+        Lambda(
+          "Resultado",
+          Call(Function("create_resultado"), Var("Resultado"))
+        )
+      )
+    )
+  ),
+});

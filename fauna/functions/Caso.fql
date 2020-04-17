@@ -1,0 +1,133 @@
+Update(Function("create_caso"), {
+  body: Query(
+    Lambda(
+      "Caso",
+      Create(Collection("Caso"), {
+        data: {
+          fechaActualizacion: Date(
+            Select(["FECHA_ACTUALIZACION"], Var("Caso"))
+          ),
+          fechaIngreso: Date(Select(["FECHA_INGRESO"], Var("Caso"))),
+          fechaSintomas: Date(Select(["FECHA_SINTOMAS"], Var("Caso"))),
+          fechaDef: If(
+            Equals(Select(["FECHA_DEF"], Var("Caso")), "9999-99-99"),
+            null,
+            Date(Select(["FECHA_DEF"], Var("Caso")))
+          ),
+          edad: ToInteger(Select(["EDAD"], Var("Caso"))),
+          origen: Ref(Collection("Origen"), Select(["ORIGEN"], Var("Caso"))),
+          sector: Ref(Collection("Sector"), Select(["SECTOR"], Var("Caso"))),
+          entidadUM: Ref(
+            Collection("Entidad"),
+            Select(["ENTIDAD_UM"], Var("Caso"))
+          ),
+          sexo: Ref(Collection("Sexo"), Select(["SEXO"], Var("Caso"))),
+          entidadNac: Ref(
+            Collection("Entidad"),
+            Select(["ENTIDAD_NAC"], Var("Caso"))
+          ),
+          entidadRes: Ref(Collection("Entidad"), Select(["SEXO"], Var("Caso"))),
+          municipioRes: Ref(
+            Collection("Municipio"),
+            Concat([
+              Select(["MUNICIPIO_RES"], Var("Caso")),
+              Select(["ENTIDAD_RES"], Var("Caso")),
+            ])
+          ),
+          tipoPaciente: Ref(
+            Collection("Paciente"),
+            Select(["TIPO_PACIENTE"], Var("Caso"))
+          ),
+          nacionalidad: Ref(
+            Collection("Nacionalidad"),
+            Select(["NACIONALIDAD"], Var("Caso"))
+          ),
+          resultado: Ref(
+            Collection("Resultado"),
+            Select(["RESULTADO"], Var("Caso"))
+          ),
+          pais: If(
+            Equals(Select(["PAIS_NACIONALIDAD"], Var("Caso")), 99),
+            "No Especificado",
+            Select(["PAIS_NACIONALIDAD"], Var("Caso"))
+          ),
+          intubado: Ref(
+            Collection("Aplica"),
+            Select(["INTUBADO"], Var("Caso"))
+          ),
+          neumonia: Ref(
+            Collection("Aplica"),
+            Select(["NEUMONIA"], Var("Caso"))
+          ),
+          neumonia: Ref(
+            Collection("Aplica"),
+            Select(["NEUMONIA"], Var("Caso"))
+          ),
+          embarazo: Ref(
+            Collection("Aplica"),
+            Select(["EMBARAZO"], Var("Caso"))
+          ),
+          hablaLenguaIndigena: Ref(
+            Collection("Aplica"),
+            Select(["HABLA_LENGUA_INDI"], Var("Caso"))
+          ),
+          diabetes: Ref(
+            Collection("Aplica"),
+            Select(["DIABETES"], Var("Caso"))
+          ),
+          epoc: Ref(Collection("Aplica"), Select(["EPOC"], Var("Caso"))),
+          asma: Ref(Collection("Aplica"), Select(["ASMA"], Var("Caso"))),
+          inmusupr: Ref(
+            Collection("Aplica"),
+            Select(["INMUSUPR"], Var("Caso"))
+          ),
+          hipertension: Ref(
+            Collection("Aplica"),
+            Select(["HIPERTENSION"], Var("Caso"))
+          ),
+          otraCondicion: Ref(
+            Collection("Aplica"),
+            Select(["OTRA_CON"], Var("Caso"))
+          ),
+          cardiovascular: Ref(
+            Collection("Aplica"),
+            Select(["CARDIOVASCULAR"], Var("Caso"))
+          ),
+          obesidad: Ref(
+            Collection("Aplica"),
+            Select(["OBESIDAD"], Var("Caso"))
+          ),
+          renalCronica: Ref(
+            Collection("Aplica"),
+            Select(["RENAL_CRONICA"], Var("Caso"))
+          ),
+          tabaquismo: Ref(
+            Collection("Aplica"),
+            Select(["TABAQUISMO"], Var("Caso"))
+          ),
+          otroCaso: Ref(
+            Collection("Aplica"),
+            Select(["OTRO_CASO"], Var("Caso"))
+          ),
+          migrante: Ref(
+            Collection("Aplica"),
+            Select(["MIGRANTE"], Var("Caso"))
+          ),
+          uci: Ref(Collection("Aplica"), Select(["DIABETES"], Var("Caso"))),
+        },
+      })
+    )
+  ),
+});
+
+Update(Function("create_caso_batch"), {
+  body: Query(
+    Lambda(
+      ["casoList"],
+      Map(
+        Var("casoList"),
+        Lambda("Caso", Call(Function("create_caso"), Var("Caso")))
+      )
+    )
+  ),
+});

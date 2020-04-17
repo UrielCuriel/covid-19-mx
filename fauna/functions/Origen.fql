@@ -1,0 +1,22 @@
+Update(Function("create_origen"), {
+  body: Query(
+    Lambda(
+      "Origen",
+      Create(Ref(Collection("Origen"), Select(["CLAVE"], Var("Origen"))), {
+        data: { desc: Select(["DESCRIPCION"], Var("Origen")) },
+      })
+    )
+  ),
+});
+
+Update(Function("create_origen_batch"), {
+  body: Query(
+    Lambda(
+      ["origenList"],
+      Map(
+        Var("origenList"),
+        Lambda("Origen", Call(Function("create_origen"), Var("Origen")))
+      )
+    )
+  ),
+});

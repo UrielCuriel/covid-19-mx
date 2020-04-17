@@ -1,0 +1,22 @@
+Update(Function("create_sector"), {
+  body: Query(
+    Lambda(
+      "Sector",
+      Create(Ref(Collection("Sector"), Select(["CLAVE"], Var("Sector"))), {
+        data: { desc: Select(["DESCRIPCION"], Var("Sector")) },
+      })
+    )
+  ),
+});
+
+Update(Function("create_sector_batch"), {
+  body: Query(
+    Lambda(
+      ["sectorList"],
+      Map(
+        Var("sectorList"),
+        Lambda("Sector", Call(Function("create_sector"), Var("Sector")))
+      )
+    )
+  ),
+});

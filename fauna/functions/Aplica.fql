@@ -1,0 +1,22 @@
+Update(Function("create_aplica"), {
+  body: Query(
+    Lambda(
+      "Aplica",
+      Create(Ref(Collection("Aplica"), Select(["CLAVE"], Var("Aplica"))), {
+        data: { desc: Select(["DESCRIPCION"], Var("Aplica")) },
+      })
+    )
+  ),
+});
+
+Update(Function("create_aplica_batch"), {
+  body: Query(
+    Lambda(
+      ["aplicaList"],
+      Map(
+        Var("aplicaList"),
+        Lambda("Aplica", Call(Function("create_aplica"), Var("Aplica")))
+      )
+    )
+  ),
+});

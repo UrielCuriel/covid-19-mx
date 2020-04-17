@@ -1,0 +1,22 @@
+Update(Function("create_sexo"), {
+  body: Query(
+    Lambda(
+      "Sexo",
+      Create(Ref(Collection("Sexo"), Select(["CLAVE"], Var("Sexo"))), {
+        data: { desc: Select(["DESCRIPCION"], Var("Sexo")) },
+      })
+    )
+  ),
+});
+
+Update(Function("create_sexo_batch"), {
+  body: Query(
+    Lambda(
+      ["sexoList"],
+      Map(
+        Var("sexoList"),
+        Lambda("Sexo", Call(Function("create_sexo"), Var("Sexo")))
+      )
+    )
+  ),
+});
